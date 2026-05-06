@@ -27,7 +27,7 @@ BOOL OnFollowChild(CHILD_PROCESS childProcess, VOID* v) {
         << "\"command_line\":\"" << Logger::JsonEscape(cmd) << "\""
         << "}";
 
-    Logger::Instance().LogProcess(oss.str(), IARG_THREAD_ID);
+    Logger::Instance().LogProcess(oss.str(), PIN_ThreadId());
 
     return true;
 }
@@ -40,7 +40,7 @@ VOID OnThreadStart(THREADID tid, CONTEXT* ctxt, INT32 flags, VOID* v) {
         << "\"event\":\"thread_start\","
         << "\"pid\":" << PIN_GetPid() << ","
         << "\"thread_id\":" << tid << ","
-        << "\"flags\":" << flags << ","
+        << "\"flags\":" << flags
         << "}";
 
     Logger::Instance().LogProcess(oss.str(), tid);

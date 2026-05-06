@@ -35,6 +35,8 @@ private:
         std::ofstream stream;
         PIN_LOCK lock;
         std::string fileName;
+        int linesWritten;
+        int flushEveryN;
         bool initialized;
         LogSink() : initialized(false) {}
     };
@@ -49,7 +51,7 @@ private:
     bool initialized_;
 
     static UINT32 LockValue(THREADID tid);
-    VOID InitSink(LogSink& sink, const std::string& fileName);
+    VOID InitSink(LogSink& sink, const std::string& fileName, int flushEveryN);
     VOID CloseSink(LogSink& sink);
     VOID WriteLine(LogSink& sink, const std::string& line, THREADID tid);
     VOID WriteJsonLine(LogSink& sink, const std::string& json, THREADID tid);

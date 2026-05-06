@@ -77,13 +77,13 @@ VOID Logger::Init() {
     if (initialized_)
         return;
 
-    InitSink(mainLog_, KnobMainOutputFile.Value());
-    InitSink(dllLog_, KnobDLLOutputFile.Value());
-    InitSink(apiLog_, KnobAPIOutputFile.Value());
-    InitSink(fileLog_, KnobFileOpsOutputFile.Value());
-    InitSink(regLog_, KnobRegistryOpsOutputFile.Value());
-    InitSink(cryptoLog_, KnobCryptoOpsOutputFile.Value());
-    InitSink(threadLog_, KnobThreadOutputFile.Value());
+    InitSink(mainLog_, KnobMainOutputFile.Value(), 10);
+    InitSink(dllLog_, KnobDLLOutputFile.Value(), 10);
+    InitSink(apiLog_, KnobAPIOutputFile.Value(), 10000);
+    InitSink(fileLog_, KnobFileOpsOutputFile.Value(), 1000);
+    InitSink(regLog_, KnobRegistryOpsOutputFile.Value(), 1000);
+    InitSink(cryptoLog_, KnobCryptoOpsOutputFile.Value(), 1000);
+    InitSink(threadLog_, KnobThreadOutputFile.Value(), 10);
     
 
     initialized_ = true;
@@ -308,12 +308,16 @@ UINT32 Logger::LockValue(THREADID tid) {
     return (tid == INVALID_THREADID) ? 1 : (static_cast<UINT32>(tid) + 1);
 }
 
-VOID Logger::InitSink(LogSink& sink, const std::string& fileName) {
+VOID Logger::InitSink(LogSink& sink, const std::string& fileName, int flushEveryN) {
     const UINT32 pid = CurrentPid();
     sink.fileName = MakePerProcessFileName(fileName, pid);
     PIN_InitLock(&sink.lock);
     sink.stream.open(sink.fileName.c_str(), std::ios::out | std::ios::trunc);
+    sink.linesWritten = 0;
+
     sink.initialized = sink.stream.is_open();
+
+    sink.flushEveryN = flushEveryN;
 
     if (!sink.initialized) {
         std::cerr << "Failed to open log file: " << fileName << std::endl;
@@ -348,7 +352,11 @@ VOID Logger::WriteLine(LogSink& sink, const std::string& line, THREADID tid) {
         }
 
         sink.stream << " " << line << std::endl;
-        sink.stream.flush();
+        sink.linesWritten++;
+
+        if ((sink.linesWritten % sink.flushEveryN) == 0) {
+            sink.stream.flush();
+        }
     }
 
     PIN_ReleaseLock(&sink.lock);
@@ -362,7 +370,11 @@ VOID Logger::WriteJsonLine(LogSink& sink, const std::string& json, THREADID tid)
 
     if (sink.stream.is_open()) {
         sink.stream << json << std::endl;
-        sink.stream.flush();
+        
+        sink.linesWritten++;
+        if ((sink.linesWritten % sink.flushEveryN) == 0) {
+            sink.stream.flush();
+        }
     }
 
     PIN_ReleaseLock(&sink.lock);
