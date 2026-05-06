@@ -34,17 +34,25 @@ std::string ReadAnsiString(const char* appPtr, size_t maxChars) {
     return result;
 }
 
+/*
+    Modified as found here: https://stackoverflow.com/questions/4804298/how-to-convert-wstring-into-string
+    To remove the conversion to '?' in paths and file names
+*/
 std::string convertWideToStr(const std::wstring& ws) {
-    std::string s;
-    s.reserve(ws.size());
-    for (wchar_t ch : ws) {
-        if (ch >= 0 && ch <= 0x7F) {
-            s.push_back(static_cast<char>(ch));
-        } else {
-            s.push_back('?');
-        }
-    }
-    return s;
+    // std::string s;
+    // s.reserve(ws.size());
+    // for (wchar_t ch : ws) {
+    //     if (ch >= 0 && ch <= 0x7F) {
+    //         s.push_back(static_cast<char>(ch));
+    //     } else {
+    //         s.push_back('?');
+    //     }
+    // }
+    // return s;
+
+    using convert_type = std::codecvt_utf8<wchar_t>;
+    std::wstring_convert<convert_type, wchar_t> converter;
+    return converter.to_bytes(ws);
 }
 
 void InstrumentRoutine(IMG img, const char* apiName, AFUNPTR beforeFunction, AFUNPTR afterFunction, UINT32 argCount) {

@@ -3,6 +3,8 @@
 #include "pin.H"
 #include <sstream>
 #include <string>
+#include <locale>
+#include <codecvt>
 
 std::wstring ReadWideString(const wchar_t* appPtr, size_t maxChars = 1024);
 std::string ReadAnsiString(const char* appPtr, size_t maxChars = 512);

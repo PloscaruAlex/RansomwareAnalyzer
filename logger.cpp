@@ -199,7 +199,7 @@ VOID Logger::LogMain(const std::string& line, THREADID tid) {
 VOID Logger::LogDllLoad(const std::string& imageName, UINT32 imageId, ADDRINT base, ADDRINT high, THREADID tid) {
     std::ostringstream oss;
     oss << "{"
-        << "\"timestamp\":\"" << Logger::JsonEscape(Logger::MakeTimestamp()) << "\","
+        //<< "\"timestamp\":\"" << Logger::JsonEscape(Logger::MakeTimestamp()) << "\","
         << "\"timestamp_ms\":" << Logger::MakeTimestampMs() << ","
         << "\"process_id\":" << Logger::CurrentPid() << ",";
 
@@ -220,7 +220,7 @@ VOID Logger::LogDllLoad(const std::string& imageName, UINT32 imageId, ADDRINT ba
 VOID Logger::LogApiCall(const std::string& dllName, const std::string& funcName, ADDRINT instructionPointer, THREADID tid) {
     std::ostringstream oss;
     oss << "{"
-        << "\"timestamp\":\"" << Logger::JsonEscape(Logger::MakeTimestamp()) << "\","
+        //<< "\"timestamp\":\"" << Logger::JsonEscape(Logger::MakeTimestamp()) << "\","
         << "\"timestamp_ms\":" << Logger::MakeTimestampMs() << ","
         << "\"process_id\":" << Logger::CurrentPid() << ",";
 
@@ -239,7 +239,7 @@ VOID Logger::LogApiCall(const std::string& dllName, const std::string& funcName,
 VOID Logger::LogFileEvent(const std::string& api, const std::string& stage, const std::string& args, THREADID tid) {
     std::ostringstream oss;
     oss << "{"
-        << "\"timestamp\":\"" << Logger::JsonEscape(Logger::MakeTimestamp()) << "\","
+        //<< "\"timestamp\":\"" << Logger::JsonEscape(Logger::MakeTimestamp()) << "\","
         << "\"timestamp_ms\":" << Logger::MakeTimestampMs() << ","
         << "\"api\":\"" << Logger::JsonEscape(api) << "\","
         << "\"stage\":\"" << Logger::JsonEscape(stage) << "\","
@@ -261,7 +261,7 @@ VOID Logger::LogFileEvent(const std::string& api, const std::string& stage, cons
 VOID Logger::LogRegistryEvent(const std::string& api, const std::string& stage, const std::string& args, THREADID tid) {
     std::ostringstream oss;
     oss << "{"
-        << "\"timestamp\":\"" << Logger::JsonEscape(Logger::MakeTimestamp()) << "\","
+        // << "\"timestamp\":\"" << Logger::JsonEscape(Logger::MakeTimestamp()) << "\","
         << "\"timestamp_ms\":" << Logger::MakeTimestampMs() << ","
         << "\"api\":\"" << Logger::JsonEscape(api) << "\","
         << "\"stage\":\"" << Logger::JsonEscape(stage) << "\","
@@ -282,7 +282,7 @@ VOID Logger::LogRegistryEvent(const std::string& api, const std::string& stage, 
 VOID Logger::LogCryptoEvent(const std::string& api, const std::string& stage, const std::string& args, THREADID tid) {
     std::ostringstream oss;
     oss << "{"
-        << "\"timestamp\":\"" << Logger::JsonEscape(Logger::MakeTimestamp()) << "\","
+        // << "\"timestamp\":\"" << Logger::JsonEscape(Logger::MakeTimestamp()) << "\","
         << "\"timestamp_ms\":" << Logger::MakeTimestampMs() << ","
         << "\"api\":\"" << Logger::JsonEscape(api) << "\","
         << "\"stage\":\"" << Logger::JsonEscape(stage) << "\","
@@ -362,6 +362,11 @@ VOID Logger::WriteLine(LogSink& sink, const std::string& line, THREADID tid) {
     PIN_ReleaseLock(&sink.lock);
 }
 
+
+/*
+    std::endl flushes every time it is used, so it defeats the purpose of interval flusing:
+    https://stackoverflow.com/questions/4751972/endl-and-flushing-the-buffer
+*/
 VOID Logger::WriteJsonLine(LogSink& sink, const std::string& json, THREADID tid) {
     if (!sink.initialized)
         return;
@@ -369,7 +374,7 @@ VOID Logger::WriteJsonLine(LogSink& sink, const std::string& json, THREADID tid)
     PIN_GetLock(&sink.lock, LockValue(tid));
 
     if (sink.stream.is_open()) {
-        sink.stream << json << std::endl;
+        sink.stream << json << '\n';
         
         sink.linesWritten++;
         if ((sink.linesWritten % sink.flushEveryN) == 0) {

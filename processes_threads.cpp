@@ -18,7 +18,7 @@ BOOL OnFollowChild(CHILD_PROCESS childProcess, VOID* v) {
 
     std::ostringstream oss;
     oss << "{"
-        << "\"timestamp\":\"" << Logger::JsonEscape(Logger::MakeTimestamp()) << "\","
+        //<< "\"timestamp\":\"" << Logger::JsonEscape(Logger::MakeTimestamp()) << "\","
         << "\"timestamp_ms\":" << Logger::MakeTimestampMs() << ","
         << "\"event\":\"child_process\","
         << "\"parent_pid\":" << PIN_GetPid() << ","
@@ -35,7 +35,7 @@ BOOL OnFollowChild(CHILD_PROCESS childProcess, VOID* v) {
 VOID OnThreadStart(THREADID tid, CONTEXT* ctxt, INT32 flags, VOID* v) {
     std::ostringstream oss;
     oss << "{"
-        << "\"timestamp\":\"" << Logger::JsonEscape(Logger::MakeTimestamp()) << "\","
+        //<< "\"timestamp\":\"" << Logger::JsonEscape(Logger::MakeTimestamp()) << "\","
         << "\"timestamp_ms\":" << Logger::MakeTimestampMs() << ","
         << "\"event\":\"thread_start\","
         << "\"pid\":" << PIN_GetPid() << ","
