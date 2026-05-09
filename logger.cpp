@@ -54,6 +54,14 @@ KNOB<std::string> KnobCryptoOpsOutputFile(
     "specify file name for crypto module"
 );
 
+KNOB<std::string> KnobNetworkOpsOutputFile(
+    KNOB_MODE_WRITEONCE,
+    "pintool",
+    "o-network",
+    "NetworkOperations.jsonl",
+    "specify file name for network operations module"
+);
+
 KNOB<std::string> KnobThreadOutputFile(
     KNOB_MODE_WRITEONCE,
     "pintool",
@@ -83,6 +91,7 @@ VOID Logger::Init() {
     InitSink(fileLog_, KnobFileOpsOutputFile.Value(), 1000);
     InitSink(regLog_, KnobRegistryOpsOutputFile.Value(), 1000);
     InitSink(cryptoLog_, KnobCryptoOpsOutputFile.Value(), 1000);
+    InitSink(networkLog_, KnobNetworkOpsOutputFile.Value(), 1000);
     InitSink(threadLog_, KnobThreadOutputFile.Value(), 10);
     
 
@@ -102,6 +111,7 @@ VOID Logger::Shutdown() {
     CloseSink(fileLog_);
     CloseSink(regLog_);
     CloseSink(cryptoLog_);
+    CloseSink(networkLog_);
     CloseSink(threadLog_);
     
     initialized_ = false;
@@ -298,6 +308,27 @@ VOID Logger::LogCryptoEvent(const std::string& api, const std::string& stage, co
 
     oss << "}";
     WriteJsonLine(cryptoLog_, oss.str(), tid);
+}
+
+VOID Logger::LogNetworkEvent(const std::string& api, const std::string& stage, const std::string& args, THREADID tid) {
+    std::ostringstream oss;
+    oss << "{"
+        // << "\"timestamp\":\"" << Logger::JsonEscape(Logger::MakeTimestamp()) << "\","
+        << "\"timestamp_ms\":" << Logger::MakeTimestampMs() << ","
+        << "\"api\":\"" << Logger::JsonEscape(api) << "\","
+        << "\"stage\":\"" << Logger::JsonEscape(stage) << "\","
+        << "\"process_id\":" << Logger::CurrentPid();
+
+    if (tid != INVALID_THREADID) {
+        oss << ",\"thread_id\":" << std::dec << tid;
+    }
+
+    if (!args.empty()) {
+        oss << "," << args;
+    }
+
+    oss << "}";
+    WriteJsonLine(networkLog_, oss.str(), tid);
 }
 
 VOID Logger::LogProcess(const std::string& line, THREADID tid) {

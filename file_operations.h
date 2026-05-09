@@ -150,7 +150,6 @@ VOID AfterGetFileAttributesExW(THREADID tid, ADDRINT retValue);
 VOID BeforeGetFileAttributesExA(THREADID tid, ADDRINT lpFileName, ADDRINT fInfoLevelId, ADDRINT lpFileInformation);
 VOID AfterGetFileAttributesExA(THREADID tid, ADDRINT retValue);
 
-void InstrumentRoutine(IMG img, const char* apiName, AFUNPTR beforeFunction, AFUNPTR afterFunction, UINT32 argCount);
 VOID InstrumentFileOperations(IMG img, VOID* v);
 
 void StartFileOperationsModule();

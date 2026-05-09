@@ -24,6 +24,7 @@ public:
     VOID LogFileEvent(const std::string& api, const std::string& stage, const std::string& args, THREADID tid = INVALID_THREADID);
     VOID LogRegistryEvent(const std::string& api, const std::string& stage, const std::string& args, THREADID tid = INVALID_THREADID);
     VOID LogCryptoEvent(const std::string& api, const std::string& stage, const std::string& args, THREADID tid = INVALID_THREADID);
+    VOID LogNetworkEvent(const std::string& api, const std::string& stage, const std::string& args, THREADID tid = INVALID_THREADID);
     VOID LogProcess(const std::string& line, THREADID tid = INVALID_THREADID);
 private:
     Logger();
@@ -48,6 +49,7 @@ private:
     LogSink regLog_;
     LogSink threadLog_;
     LogSink cryptoLog_;
+    LogSink networkLog_;
     bool initialized_;
 
     static UINT32 LockValue(THREADID tid);
@@ -63,6 +65,7 @@ extern KNOB<std::string> KnobAPIOutputFile;
 extern KNOB<std::string> KnobFileOpsOutputFile;
 extern KNOB<std::string> KnobRegistryOpsOutputFile;
 extern KNOB<std::string> KnobCryptoOpsOutputFile;
+extern KNOB<std::string> KnobNetworkOpsOutputFile;
 extern KNOB<std::string> KnobThreadOutputFile;
 
 #endif

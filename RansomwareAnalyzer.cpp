@@ -9,8 +9,10 @@
 //#include "api_module.h"
 #include "file_operations.h"
 #include "registry_operations.h"
-#include "processes_threads.h"
 #include "crypto_operations.h"
+#include "network_operations.h"
+#include "processes_threads.h"
+
 
 INT32 Usage() {
     std::cerr << "This Pintool gathers the following information from a ransomware sample at runtime: " << std::endl;
@@ -19,6 +21,7 @@ INT32 Usage() {
     std::cerr << "  - File operations: file-oriented Windows APIs calls + arguments;" << std::endl;
     std::cerr << "  - Registry operations: registry-oriented Windows APIs calls + arguments;" << std::endl;
     std::cerr << "  - Crypto operations: crypto Windows APIs calls + arguments;" << std::endl;
+    std::cerr << "  - Network operations: network related Windows APIs calls + arguments;" << std::endl;
     std::cerr << "  - Processes and threads: what child processes are created by the sample and how many threads it uses;" << std::endl;
     std::cerr << std::endl;
     std::cerr << "To run the pintool, use the following command: " << std::endl;
@@ -47,6 +50,9 @@ void StartAllModules() {
     Logger::Instance().LogMain("Starting Crypto Operations module ...");
     StartCryptoOperationsModule();
 
+    Logger::Instance().LogMain("Starting Network Operations module ...");
+    StartNetworkOperationsModule();
+
     Logger::Instance().LogMain("Starting Processes and Threads module ...");
     StartProcessesThreadsModule();
 
@@ -59,6 +65,7 @@ VOID Fini(INT32 code, VOID* v) {
     FinishFileOperationsModule();
     FinishRegistryOperationsModule();
     FinishCryptoOperationsModule();
+    FinishNetworkOperationsModule();
     FinishProcessesThreadsModule();
 
     Logger::Instance().LogMain("Ransomware Analyzer pintool stopping");
