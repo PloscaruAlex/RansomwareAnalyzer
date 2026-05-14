@@ -65,27 +65,11 @@ VOID AfterNtOpenKey(THREADID tid, ADDRINT retValue);
 VOID BeforeNtCreateKey(THREADID tid, ADDRINT KeyHandle, ADDRINT DesiredAccess, ADDRINT ObjectAttributes, ADDRINT TitleIndex, ADDRINT Class, ADDRINT CreateOptions, ADDRINT Disposition);
 VOID AfterNtCreateKey(THREADID tid, ADDRINT retValue);
 
-VOID BeforeNtQueryValueKey(THREADID tid, ADDRINT KeyHandle, ADDRINT ValueName, ADDRINT KeyValueInformationClass, ADDRINT KeyValueInformation, ADDRINT Length, ADDRINT ResultLength);
-VOID AfterNtQueryValueKey(THREADID tid, ADDRINT retValue);
-
 VOID BeforeNtSetValueKey(THREADID tid, ADDRINT KeyHandle, ADDRINT ValueName, ADDRINT TitleIndex, ADDRINT Type, ADDRINT Data, ADDRINT DataSize);
 VOID AfterNtSetValueKey(THREADID tid, ADDRINT retValue);
 
-VOID BeforeNtDeleteKey(THREADID tid, ADDRINT KeyHandle);
-VOID AfterNtDeleteKey(THREADID tid, ADDRINT retValue);
-
 VOID BeforeNtDeleteValueKey(THREADID tid, ADDRINT KeyHandle, ADDRINT ValueName);
 VOID AfterNtDeleteValueKey(THREADID tid, ADDRINT retValue);
-
-VOID BeforeNtEnumerateKey(THREADID tid, ADDRINT KeyHandle, ADDRINT Index, ADDRINT KeyInformationClass, ADDRINT KeyInformation, ADDRINT Length, ADDRINT ResultLength);
-VOID AfterNtEnumerateKey(THREADID tid, ADDRINT retValue);
-
-VOID BeforeNtEnumerateValueKey(THREADID tid, ADDRINT KeyHandle, ADDRINT Index, ADDRINT KeyValueInformationClass, ADDRINT KeyValueInformation, ADDRINT Length, ADDRINT ResultLength);
-VOID AfterNtEnumerateValueKey(THREADID tid, ADDRINT retValue);
-
-VOID BeforeNtQueryKey(THREADID tid, ADDRINT KeyHandle, ADDRINT KeyInformationClass, ADDRINT KeyInformation, ADDRINT Length, ADDRINT ResultLength);
-VOID AfterNtQueryKey(THREADID tid, ADDRINT retValue);
-
 
 VOID InstrumentRegistryOperations(IMG img, VOID* v);
 

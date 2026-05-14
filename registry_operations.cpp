@@ -410,26 +410,6 @@ VOID AfterNtCreateKey(THREADID tid, ADDRINT retValue) { LogHandleResultRegistry(
 
 /*
     Documentation (not Microsoft):
-    https://ntdoc.m417z.com/ntqueryvaluekey
-*/
-VOID BeforeNtQueryValueKey(THREADID tid, ADDRINT KeyHandle, ADDRINT ValueName, ADDRINT KeyValueInformationClass, ADDRINT KeyValueInformation, ADDRINT Length, ADDRINT ResultLength) {
-    std::ostringstream body;
-    body << "\"args\":{"
-         << "\"KeyHandle\":\"0x" << std::hex << KeyHandle << "\","
-         << "\"ValueName\":\"0x" << std::hex << ValueName << "\","
-         << "\"KeyValueInformationClass\":\"0x" << std::hex << KeyValueInformationClass << "\","
-         << "\"KeyValueInformation\":\"0x" << std::hex << KeyValueInformation << "\","
-         << "\"Length\":\"0x" << std::hex << Length << "\","
-         << "\"ResultLength\":\"0x" << std::hex << ResultLength << "\""
-         << "}";
-
-    Logger::Instance().LogRegistryEvent("NtQueryValueKey", "before", body.str(), tid);
-}
-
-VOID AfterNtQueryValueKey(THREADID tid, ADDRINT retValue) { LogHandleResultRegistry("NtQueryValueKey", retValue, tid, "return"); }
-
-/*
-    Documentation (not Microsoft):
     https://ntdoc.m417z.com/ntsetvaluekey
 */
 VOID BeforeNtSetValueKey(THREADID tid, ADDRINT KeyHandle, ADDRINT ValueName, ADDRINT TitleIndex, ADDRINT Type, ADDRINT Data, ADDRINT DataSize) {
@@ -450,22 +430,7 @@ VOID AfterNtSetValueKey(THREADID tid, ADDRINT retValue) { LogHandleResultRegistr
 
 /*
     Documentation (not Microsoft):
-    https://ntdoc.m417z.com/ntdeletekey
-*/
-VOID BeforeNtDeleteKey(THREADID tid, ADDRINT KeyHandle) {
-    std::ostringstream body;
-    body << "\"args\":{"
-         << "\"KeyHandle\":\"0x" << std::hex << KeyHandle << "\""
-         << "}";
-
-    Logger::Instance().LogRegistryEvent("NtDeleteKey", "before", body.str(), tid);
-}
-
-VOID AfterNtDeleteKey(THREADID tid, ADDRINT retValue) { LogHandleResultRegistry("NtDeleteKey", retValue, tid, "return"); }
-
-/*
-    Documentation (not Microsoft):
-    https://ntdoc.m417z.com/ntdeletekey
+    https://ntdoc.m417z.com/ntdeletevaluekey
 */
 VOID BeforeNtDeleteValueKey(THREADID tid, ADDRINT KeyHandle, ADDRINT ValueName) {
     std::ostringstream body;
@@ -478,66 +443,6 @@ VOID BeforeNtDeleteValueKey(THREADID tid, ADDRINT KeyHandle, ADDRINT ValueName) 
 }
 
 VOID AfterNtDeleteValueKey(THREADID tid, ADDRINT retValue) { LogHandleResultRegistry("NtDeleteValueKey", retValue, tid, "return"); }
-
-/*
-    Documentation (not Microsoft):
-    https://ntdoc.m417z.com/ntdeletekey
-*/
-VOID BeforeNtEnumerateKey(THREADID tid, ADDRINT KeyHandle, ADDRINT Index, ADDRINT KeyInformationClass, ADDRINT KeyInformation, ADDRINT Length, ADDRINT ResultLength) {
-    std::ostringstream body;
-    body << "\"args\":{"
-         << "\"KeyHandle\":\"0x" << std::hex << KeyHandle << "\","
-         << "\"Index\":\"0x" << std::hex << Index << "\","
-         << "\"KeyInformationClass\":\"0x" << std::hex << KeyInformationClass << "\","
-         << "\"KeyInformation\":\"0x" << std::hex << KeyInformation << "\","
-         << "\"Length\":\"0x" << std::hex << Length << "\","
-         << "\"ResultLength\":\"0x" << std::hex << ResultLength << "\""
-         << "}";
-
-    Logger::Instance().LogRegistryEvent("NtEnumerateKey", "before", body.str(), tid);
-}
-
-VOID AfterNtEnumerateKey(THREADID tid, ADDRINT retValue) { LogHandleResultRegistry("NtEnumerateKey", retValue, tid, "return"); }
-
-/*
-    Documentation (not Microsoft):
-    https://ntdoc.m417z.com/ntenumeratevaluekey
-*/
-VOID BeforeNtEnumerateValueKey(THREADID tid, ADDRINT KeyHandle, ADDRINT Index, ADDRINT KeyValueInformationClass, ADDRINT KeyValueInformation, ADDRINT Length, ADDRINT ResultLength) {
-    std::ostringstream body;
-    body << "\"args\":{"
-         << "\"KeyHandle\":\"0x" << std::hex << KeyHandle << "\","
-         << "\"Index\":\"0x" << std::hex << Index << "\","
-         << "\"KeyValueInformationClass\":\"0x" << std::hex << KeyValueInformationClass << "\","
-         << "\"KeyValueInformation\":\"0x" << std::hex << KeyValueInformation << "\","
-         << "\"Length\":\"0x" << std::hex << Length << "\","
-         << "\"ResultLength\":\"0x" << std::hex << ResultLength << "\""
-         << "}";
-
-    Logger::Instance().LogRegistryEvent("NtEnumerateValueKey", "before", body.str(), tid);
-}
-
-VOID AfterNtEnumerateValueKey(THREADID tid, ADDRINT retValue) { LogHandleResultRegistry("NtEnumerateValueKey", retValue, tid, "return"); }
-
-/*
-    Documentation (not Microsoft):
-    https://ntdoc.m417z.com/ntquerykey
-*/
-VOID BeforeNtQueryKey(THREADID tid, ADDRINT KeyHandle, ADDRINT KeyInformationClass, ADDRINT KeyInformation, ADDRINT Length, ADDRINT ResultLength) {
-    std::ostringstream body;
-    body << "\"args\":{"
-         << "\"KeyHandle\":\"0x" << std::hex << KeyHandle << "\","
-         << "\"KeyInformationClass\":\"0x" << std::hex << KeyInformationClass << "\","
-         << "\"KeyInformation\":\"0x" << std::hex << KeyInformation << "\","
-         << "\"Length\":\"0x" << std::hex << Length << "\","
-         << "\"ResultLength\":\"0x" << std::hex << ResultLength << "\""
-         << "}";
-
-    Logger::Instance().LogRegistryEvent("NtQueryKey", "before", body.str(), tid);
-}
-
-VOID AfterNtQueryKey(THREADID tid, ADDRINT retValue) { LogHandleResultRegistry("NtQueryKey", retValue, tid, "return"); }
-
 
 VOID InstrumentRegistryOperations(IMG img, VOID* v) {
     InstrumentRoutine(img, "RegOpenKeyExW", AFUNPTR(BeforeRegOpenKeyExW), AFUNPTR(AfterRegOpenKeyExW), 5);
@@ -559,13 +464,8 @@ VOID InstrumentRegistryOperations(IMG img, VOID* v) {
     InstrumentRoutine(img, "RegCloseKey", AFUNPTR(BeforeRegCloseKey), AFUNPTR(AfterRegCloseKey), 1);
     InstrumentRoutine(img, "NtOpenKey", AFUNPTR(BeforeNtOpenKey), AFUNPTR(AfterNtOpenKey), 3);
     InstrumentRoutine(img, "NtCreateKey", AFUNPTR(BeforeNtCreateKey), AFUNPTR(AfterNtCreateKey), 7);
-    //InstrumentRoutine(img, "NtQueryValueKey", AFUNPTR(BeforeNtQueryValueKey), AFUNPTR(AfterNtQueryValueKey), 6); //this can be left out
     InstrumentRoutine(img, "NtSetValueKey", AFUNPTR(BeforeNtSetValueKey), AFUNPTR(AfterNtSetValueKey), 6);
-    //InstrumentRoutine(img, "NtDeleteKey", AFUNPTR(BeforeNtDeleteKey), AFUNPTR(AfterNtDeleteKey), 1);
     InstrumentRoutine(img, "NtDeleteValueKey", AFUNPTR(BeforeNtDeleteValueKey), AFUNPTR(AfterNtDeleteValueKey), 2);
-    //InstrumentRoutine(img, "NtEnumerateKey", AFUNPTR(BeforeNtEnumerateKey), AFUNPTR(AfterNtEnumerateKey), 6);
-    //InstrumentRoutine(img, "NtEnumerateValueKey", AFUNPTR(BeforeNtEnumerateValueKey), AFUNPTR(AfterNtEnumerateValueKey), 6);
-    //InstrumentRoutine(img, "NtQueryKey", AFUNPTR(BeforeNtQueryKey), AFUNPTR(AfterNtQueryKey), 5); // this can be left out
 }
 
 void StartRegistryOperationsModule() {
