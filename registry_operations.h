@@ -6,7 +6,7 @@
 #include <string>
 #include "utils.h"
 
-void LogHandleResultRegistry(const std::string& api, ADDRINT retValue, THREADID tid, const char* fieldName);
+void LogZeroResultRegistry(const std::string& api, ADDRINT retValue, THREADID tid, const char* fieldName);
 
 VOID BeforeRegOpenKeyExW(THREADID tid, ADDRINT hKey, ADDRINT lpSubKey, ADDRINT ulOptions, ADDRINT samDesired, ADDRINT phkResult);
 VOID AfterRegOpenKeyExW(THREADID tid, ADDRINT retValue);

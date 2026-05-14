@@ -1,14 +1,13 @@
 #include "registry_operations.h"
 
-void LogHandleResultRegistry(const std::string& api, ADDRINT retValue, THREADID tid, const char* fieldName) {
+void LogZeroResultRegistry(const std::string& api, ADDRINT retValue, THREADID tid, const char* fieldName) {
     std::ostringstream body;
     body << "\"result\":{"
-         << "\"" << fieldName << "\":\"0x" << std::hex << retValue << "\","
-         << "\"success\":" << ((retValue != 0 && retValue != static_cast<ADDRINT>(-1)) ? "true" : "false")
+         << "\"" << fieldName << "\":\"0x" << std::hex << retValue << "\"," 
+         << "\"success\":" << ((retValue == 0) ? "true" : "false")
          << "}";
     Logger::Instance().LogRegistryEvent(api, "after", body.str(), tid);
 }
-
 
 /*
     Microsoft Documentation:
@@ -29,7 +28,7 @@ VOID BeforeRegOpenKeyExW(THREADID tid, ADDRINT hKey, ADDRINT lpSubKey, ADDRINT u
     Logger::Instance().LogRegistryEvent("RegOpenKeyExW", "before", body.str(), tid);
 }
 
-VOID AfterRegOpenKeyExW(THREADID tid, ADDRINT retValue) { LogHandleResultRegistry("RegOpenKeyExW", retValue, tid, "return"); }
+VOID AfterRegOpenKeyExW(THREADID tid, ADDRINT retValue) { LogZeroResultRegistry("RegOpenKeyExW", retValue, tid, "return"); }
 
 /*
     Microsoft Documentation:
@@ -50,7 +49,7 @@ VOID BeforeRegOpenKeyExA(THREADID tid, ADDRINT hKey, ADDRINT lpSubKey, ADDRINT u
     Logger::Instance().LogRegistryEvent("RegOpenKeyExA", "before", body.str(), tid);
 }
 
-VOID AfterRegOpenKeyExA(THREADID tid, ADDRINT retValue) { LogHandleResultRegistry("RegOpenKeyExA", retValue, tid, "return"); }
+VOID AfterRegOpenKeyExA(THREADID tid, ADDRINT retValue) { LogZeroResultRegistry("RegOpenKeyExA", retValue, tid, "return"); }
 
 /*
     Microsoft Documentation:
@@ -76,7 +75,7 @@ VOID BeforeRegCreateKeyExW(THREADID tid, ADDRINT hKey, ADDRINT lpSubKey, ADDRINT
     Logger::Instance().LogRegistryEvent("RegCreateKeyExW", "before", body.str(), tid);
 }
 
-VOID AfterRegCreateKeyExW(THREADID tid, ADDRINT retValue) { LogHandleResultRegistry("RegCreateKeyExW", retValue, tid, "return"); }
+VOID AfterRegCreateKeyExW(THREADID tid, ADDRINT retValue) { LogZeroResultRegistry("RegCreateKeyExW", retValue, tid, "return"); }
 
 /*
     Microsoft Documentation:
@@ -102,7 +101,7 @@ VOID BeforeRegCreateKeyExA(THREADID tid, ADDRINT hKey, ADDRINT lpSubKey, ADDRINT
     Logger::Instance().LogRegistryEvent("RegCreateKeyExA", "before", body.str(), tid);
 }
 
-VOID AfterRegCreateKeyExA(THREADID tid, ADDRINT retValue) { LogHandleResultRegistry("RegCreateKeyExA", retValue, tid, "return"); }
+VOID AfterRegCreateKeyExA(THREADID tid, ADDRINT retValue) { LogZeroResultRegistry("RegCreateKeyExA", retValue, tid, "return"); }
 
 /*
     Microsoft Documentation:
@@ -124,7 +123,7 @@ VOID BeforeRegSetValueExW(THREADID tid, ADDRINT hKey, ADDRINT lpValueName, ADDRI
     Logger::Instance().LogRegistryEvent("RegSetValueExW", "before", body.str(), tid);
 }
 
-VOID AfterRegSetValueExW(THREADID tid, ADDRINT retValue) { LogHandleResultRegistry("RegSetValueExW", retValue, tid, "return"); }
+VOID AfterRegSetValueExW(THREADID tid, ADDRINT retValue) { LogZeroResultRegistry("RegSetValueExW", retValue, tid, "return"); }
 
 /*
     Microsoft Documentation:
@@ -146,7 +145,7 @@ VOID BeforeRegSetValueExA(THREADID tid, ADDRINT hKey, ADDRINT lpValueName, ADDRI
     Logger::Instance().LogRegistryEvent("RegSetValueExA", "before", body.str(), tid);
 }
 
-VOID AfterRegSetValueExA(THREADID tid, ADDRINT retValue) { LogHandleResultRegistry("RegSetValueExA", retValue, tid, "return"); }
+VOID AfterRegSetValueExA(THREADID tid, ADDRINT retValue) { LogZeroResultRegistry("RegSetValueExA", retValue, tid, "return"); }
 
 /*
     Microsoft Documentation:
@@ -168,7 +167,7 @@ VOID BeforeRegQueryValueExW(THREADID tid, ADDRINT hKey, ADDRINT lpValueName, ADD
     Logger::Instance().LogRegistryEvent("RegQueryValueExW", "before", body.str(), tid);
 }
 
-VOID AfterRegQueryValueExW(THREADID tid, ADDRINT retValue) { LogHandleResultRegistry("RegQueryValueExW", retValue, tid, "return"); }
+VOID AfterRegQueryValueExW(THREADID tid, ADDRINT retValue) { LogZeroResultRegistry("RegQueryValueExW", retValue, tid, "return"); }
 
 /*
     Microsoft Documentation:
@@ -190,7 +189,7 @@ VOID BeforeRegQueryValueExA(THREADID tid, ADDRINT hKey, ADDRINT lpValueName, ADD
     Logger::Instance().LogRegistryEvent("RegQueryValueExA", "before", body.str(), tid);
 }
 
-VOID AfterRegQueryValueExA(THREADID tid, ADDRINT retValue) { LogHandleResultRegistry("RegQueryValueExA", retValue, tid, "return"); }
+VOID AfterRegQueryValueExA(THREADID tid, ADDRINT retValue) { LogZeroResultRegistry("RegQueryValueExA", retValue, tid, "return"); }
 
 /*
     Microsoft Documentation:
@@ -208,7 +207,7 @@ VOID BeforeRegDeleteKeyW(THREADID tid, ADDRINT hKey, ADDRINT lpSubKey) {
     Logger::Instance().LogRegistryEvent("RegDeleteKeyW", "before", body.str(), tid);
 }
 
-VOID AfterRegDeleteKeyW(THREADID tid, ADDRINT retValue) { LogHandleResultRegistry("RegDeleteKeyW", retValue, tid, "return"); }
+VOID AfterRegDeleteKeyW(THREADID tid, ADDRINT retValue) { LogZeroResultRegistry("RegDeleteKeyW", retValue, tid, "return"); }
 
 /*
     Microsoft Documentation:
@@ -226,7 +225,7 @@ VOID BeforeRegDeleteKeyA(THREADID tid, ADDRINT hKey, ADDRINT lpSubKey) {
     Logger::Instance().LogRegistryEvent("RegDeleteKeyA", "before", body.str(), tid);
 }
 
-VOID AfterRegDeleteKeyA(THREADID tid, ADDRINT retValue) { LogHandleResultRegistry("RegDeleteKeyA", retValue, tid, "return"); }
+VOID AfterRegDeleteKeyA(THREADID tid, ADDRINT retValue) { LogZeroResultRegistry("RegDeleteKeyA", retValue, tid, "return"); }
 
 /*
     Microsoft Documentation:
@@ -244,7 +243,7 @@ VOID BeforeRegDeleteValueW(THREADID tid, ADDRINT hKey, ADDRINT lpValueName) {
     Logger::Instance().LogRegistryEvent("RegDeleteValueW", "before", body.str(), tid);
 }
 
-VOID AfterRegDeleteValueW(THREADID tid, ADDRINT retValue) { LogHandleResultRegistry("RegDeleteValueW", retValue, tid, "return"); }
+VOID AfterRegDeleteValueW(THREADID tid, ADDRINT retValue) { LogZeroResultRegistry("RegDeleteValueW", retValue, tid, "return"); }
 
 /*
     Microsoft Documentation:
@@ -262,7 +261,7 @@ VOID BeforeRegDeleteValueA(THREADID tid, ADDRINT hKey, ADDRINT lpValueName) {
     Logger::Instance().LogRegistryEvent("RegDeleteValueA", "before", body.str(), tid);
 }
 
-VOID AfterRegDeleteValueA(THREADID tid, ADDRINT retValue) { LogHandleResultRegistry("RegDeleteValueA", retValue, tid, "return"); }
+VOID AfterRegDeleteValueA(THREADID tid, ADDRINT retValue) { LogZeroResultRegistry("RegDeleteValueA", retValue, tid, "return"); }
 
 /*
     Microsoft Documentation:
@@ -285,7 +284,7 @@ VOID BeforeRegEnumKeyExW(THREADID tid, ADDRINT hKey, ADDRINT dwIndex, ADDRINT lp
     Logger::Instance().LogRegistryEvent("RegEnumKeyExW", "before", body.str(), tid);
 }
 
-VOID AfterRegEnumKeyExW(THREADID tid, ADDRINT retValue) { LogHandleResultRegistry("RegEnumKeyExW", retValue, tid, "return"); }
+VOID AfterRegEnumKeyExW(THREADID tid, ADDRINT retValue) { LogZeroResultRegistry("RegEnumKeyExW", retValue, tid, "return"); }
 
 /*
     Microsoft Documentation:
@@ -308,7 +307,7 @@ VOID BeforeRegEnumKeyExA(THREADID tid, ADDRINT hKey, ADDRINT dwIndex, ADDRINT lp
     Logger::Instance().LogRegistryEvent("RegEnumKeyExA", "before", body.str(), tid);
 }
 
-VOID AfterRegEnumKeyExA(THREADID tid, ADDRINT retValue) { LogHandleResultRegistry("RegEnumKeyExA", retValue, tid, "return"); }
+VOID AfterRegEnumKeyExA(THREADID tid, ADDRINT retValue) { LogZeroResultRegistry("RegEnumKeyExA", retValue, tid, "return"); }
 
 /*
     Microsoft Documentation:
@@ -331,7 +330,7 @@ VOID BeforeRegEnumValueW(THREADID tid, ADDRINT hKey, ADDRINT dwIndex, ADDRINT lp
     Logger::Instance().LogRegistryEvent("RegEnumValueW", "before", body.str(), tid);
 }
 
-VOID AfterRegEnumValueW(THREADID tid, ADDRINT retValue) { LogHandleResultRegistry("RegEnumValueW", retValue, tid, "return"); }
+VOID AfterRegEnumValueW(THREADID tid, ADDRINT retValue) { LogZeroResultRegistry("RegEnumValueW", retValue, tid, "return"); }
 
 /*
     Microsoft Documentation:
@@ -353,7 +352,7 @@ VOID BeforeRegEnumValueA(THREADID tid, ADDRINT hKey, ADDRINT dwIndex, ADDRINT lp
     Logger::Instance().LogRegistryEvent("RegEnumValueA", "before", body.str(), tid);
 }
 
-VOID AfterRegEnumValueA(THREADID tid, ADDRINT retValue) { LogHandleResultRegistry("RegEnumValueA", retValue, tid, "return"); }
+VOID AfterRegEnumValueA(THREADID tid, ADDRINT retValue) { LogZeroResultRegistry("RegEnumValueA", retValue, tid, "return"); }
 
 /*
     Microsoft Documentation:
@@ -368,7 +367,7 @@ VOID BeforeRegCloseKey(THREADID tid, ADDRINT hKey) {
     Logger::Instance().LogRegistryEvent("RegCloseKey", "before", body.str(), tid);
 }
 
-VOID AfterRegCloseKey(THREADID tid, ADDRINT retValue) { LogHandleResultRegistry("RegCloseKey", retValue, tid, "return"); }
+VOID AfterRegCloseKey(THREADID tid, ADDRINT retValue) { LogZeroResultRegistry("RegCloseKey", retValue, tid, "return"); }
 
 /*
     Documentation (not Microsoft):
@@ -385,7 +384,7 @@ VOID BeforeNtOpenKey(THREADID tid, ADDRINT KeyHandle, ADDRINT DesiredAccess, ADD
     Logger::Instance().LogRegistryEvent("NtOpenKey", "before", body.str(), tid);
 }
 
-VOID AfterNtOpenKey(THREADID tid, ADDRINT retValue) { LogHandleResultRegistry("NtOpenKey", retValue, tid, "return"); }
+VOID AfterNtOpenKey(THREADID tid, ADDRINT retValue) { LogZeroResultRegistry("NtOpenKey", retValue, tid, "return"); }
 
 /*
     Documentation (not Microsoft):
@@ -406,7 +405,7 @@ VOID BeforeNtCreateKey(THREADID tid, ADDRINT KeyHandle, ADDRINT DesiredAccess, A
     Logger::Instance().LogRegistryEvent("NtCreateKey", "before", body.str(), tid);
 }
 
-VOID AfterNtCreateKey(THREADID tid, ADDRINT retValue) { LogHandleResultRegistry("NtCreateKey", retValue, tid, "return"); }
+VOID AfterNtCreateKey(THREADID tid, ADDRINT retValue) { LogZeroResultRegistry("NtCreateKey", retValue, tid, "return"); }
 
 /*
     Documentation (not Microsoft):
@@ -426,7 +425,7 @@ VOID BeforeNtSetValueKey(THREADID tid, ADDRINT KeyHandle, ADDRINT ValueName, ADD
     Logger::Instance().LogRegistryEvent("NtSetValueKey", "before", body.str(), tid);
 }
 
-VOID AfterNtSetValueKey(THREADID tid, ADDRINT retValue) { LogHandleResultRegistry("NtSetValueKey", retValue, tid, "return"); }
+VOID AfterNtSetValueKey(THREADID tid, ADDRINT retValue) { LogZeroResultRegistry("NtSetValueKey", retValue, tid, "return"); }
 
 /*
     Documentation (not Microsoft):
@@ -442,7 +441,7 @@ VOID BeforeNtDeleteValueKey(THREADID tid, ADDRINT KeyHandle, ADDRINT ValueName) 
     Logger::Instance().LogRegistryEvent("NtDeleteValueKey", "before", body.str(), tid);
 }
 
-VOID AfterNtDeleteValueKey(THREADID tid, ADDRINT retValue) { LogHandleResultRegistry("NtDeleteValueKey", retValue, tid, "return"); }
+VOID AfterNtDeleteValueKey(THREADID tid, ADDRINT retValue) { LogZeroResultRegistry("NtDeleteValueKey", retValue, tid, "return"); }
 
 VOID InstrumentRegistryOperations(IMG img, VOID* v) {
     InstrumentRoutine(img, "RegOpenKeyExW", AFUNPTR(BeforeRegOpenKeyExW), AFUNPTR(AfterRegOpenKeyExW), 5);
