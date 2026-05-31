@@ -26,8 +26,8 @@ VOID BeforeGetHostByName(THREADID tid, ADDRINT name);
 VOID AfterGetHostByName(THREADID tid, ADDRINT retValue);
 VOID BeforeGetAddrInfoW(THREADID tid, ADDRINT pNodeName, ADDRINT pServiceName, ADDRINT pHints, ADDRINT ppResult);
 VOID AfterGetAddrInfoW(THREADID tid, ADDRINT retValue);
-VOID BeforeGetAddrInfoA(THREADID tid, ADDRINT pNodeName, ADDRINT pServiceName, ADDRINT pHints, ADDRINT ppResult);
-VOID AfterGetAddrInfoA(THREADID tid, ADDRINT retValue);
+// VOID BeforeGetAddrInfoA(THREADID tid, ADDRINT pNodeName, ADDRINT pServiceName, ADDRINT pHints, ADDRINT ppResult);
+// VOID AfterGetAddrInfoA(THREADID tid, ADDRINT retValue);
 
 VOID BeforeHttpOpenRequestA(THREADID tid, ADDRINT hConnect, ADDRINT lpszVerb, ADDRINT lpszObjectName, ADDRINT lpszVersion, ADDRINT lpszReferrer, ADDRINT lplpszAcceptTypes, ADDRINT dwFlags, ADDRINT dwContext);
 VOID AfterHttpOpenRequestA(THREADID tid, ADDRINT retValue);

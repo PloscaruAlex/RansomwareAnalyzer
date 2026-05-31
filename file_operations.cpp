@@ -507,7 +507,7 @@ VOID BeforeNtReadFile(
          << "\"IoStatusBlock\":\"0x" << std::hex << IoStatusBlock << "\","
          << "\"Buffer\":\"0x" << std::hex << Buffer << "\","
          << "\"Length\":\"0x" << std::hex << Length << "\","
-         << "\"ByteOffset\":\"0x" << std::hex << ByteOffset << "\""
+         << "\"ByteOffset\":\"0x" << std::hex << ByteOffset << "\","
          << "\"Key\":\"0x" << std::hex << Key << "\""
          << "}";
 
@@ -540,7 +540,7 @@ VOID BeforeNtWriteFile(
          << "\"IoStatusBlock\":\"0x" << std::hex << IoStatusBlock << "\","
          << "\"Buffer\":\"0x" << std::hex << Buffer << "\","
          << "\"Length\":\"0x" << std::hex << Length << "\","
-         << "\"ByteOffset\":\"0x" << std::hex << ByteOffset << "\""
+         << "\"ByteOffset\":\"0x" << std::hex << ByteOffset << "\","
          << "\"Key\":\"0x" << std::hex << Key << "\""
          << "}";
 

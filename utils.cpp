@@ -55,8 +55,53 @@ std::string convertWideToStr(const std::wstring& ws) {
     return converter.to_bytes(ws);
 }
 
+
+static bool AddressIsExecutable(IMG img, ADDRINT addr) {
+    for (SEC sec = IMG_SecHead(img); SEC_Valid(sec); sec = SEC_Next(sec)) {
+        if (!SEC_IsExecutable(sec))
+            continue;
+        ADDRINT secStart = SEC_Address(sec);
+        ADDRINT secEnd   = secStart + SEC_Size(sec);
+        if (addr >= secStart && addr < secEnd)
+            return true;
+    }
+    return false;
+}
+
+/*
+    Added from tiny tracer t oresolve the stubs and tail calling that was crashing the network operations module
+    https://github.com/hasherezade/tiny_tracer/blob/b9d0a7e6c8a38cbbb12f6e66f8034a61d845d885/ModuleInfo.cpp#L100
+*/
+static RTN FindRoutineBySymbol(IMG img, const char* apiName) {
+    for (SYM sym = IMG_RegsymHead(img); SYM_Valid(sym); sym = SYM_Next(sym)) {
+        const std::string undName =
+            PIN_UndecorateSymbolName(SYM_Name(sym), UNDECORATION_NAME_ONLY);
+        if (undName != apiName)
+            continue;
+ 
+        const ADDRINT offset = SYM_Value(sym);
+        if (offset == UNKNOWN_ADDR)
+            continue;
+ 
+        const ADDRINT addr = IMG_LowAddress(img) + offset;
+ 
+        // Skip forwarded exports: their RVA points into the .edata section,
+        // not into executable code.  Calling RTN_FindByAddress there gives a
+        // broken RTN that silently swallows IPOINT_BEFORE callbacks.
+        if (!AddressIsExecutable(img, addr))
+            continue;
+ 
+        RTN rtn = RTN_FindByAddress(addr);
+        if (RTN_Valid(rtn))
+            return rtn;
+    }
+ 
+    // Fallback for functions not found via the symbol table.
+    return RTN_FindByName(img, apiName);
+}
+
 void InstrumentRoutine(IMG img, const char* apiName, AFUNPTR beforeFunction, AFUNPTR afterFunction, UINT32 argCount) {
-    RTN rtn = RTN_FindByName(img, apiName);
+    RTN rtn = FindRoutineBySymbol(img, apiName);
     if (!RTN_Valid(rtn)) {
         return;
     }

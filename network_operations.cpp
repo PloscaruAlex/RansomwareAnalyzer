@@ -422,26 +422,44 @@ VOID BeforeDnsQuery_W(THREADID tid, ADDRINT pszName, ADDRINT wType, ADDRINT opti
 
 VOID AfterDnsQuery_W(THREADID tid, ADDRINT retValue) { LogZeroResultNetwork("DnsQuery_W", retValue, tid, "return"); }
 
+static bool ImageNameContains(IMG img, const char* substr) {
+    std::string name = IMG_Name(img);
+    std::transform(name.begin(), name.end(), name.begin(), ::tolower);
+    return name.find(substr) != std::string::npos;
+}
+ 
 VOID InstrumentNetworkOperations(IMG img, VOID* v) {
-    InstrumentRoutine(img, "send", AFUNPTR(BeforeSend), AFUNPTR(AfterSend), 4);
-    InstrumentRoutine(img, "sendto", AFUNPTR(BeforeSendTo), AFUNPTR(AfterSendTo), 6);
-    InstrumentRoutine(img, "connect", AFUNPTR(BeforeConnect), AFUNPTR(AfterConnect), 3);
-    InstrumentRoutine(img, "recv", AFUNPTR(BeforeRecv), AFUNPTR(AfterRecv), 4);
-    InstrumentRoutine(img, "recvfrom", AFUNPTR(BeforeRecvFrom), AFUNPTR(AfterRecvFrom), 6);
-    InstrumentRoutine(img, "getaddrinfo", AFUNPTR(BeforeGetAddrInfo), AFUNPTR(AfterGetAddrInfo), 4);
-    InstrumentRoutine(img, "gethostbyname", AFUNPTR(BeforeGetHostByName), AFUNPTR(AfterGetHostByName), 1);
-    InstrumentRoutine(img, "GetAddrInfoW", AFUNPTR(BeforeGetAddrInfoW), AFUNPTR(AfterGetAddrInfoW), 4);
-    InstrumentRoutine(img, "HttpOpenRequestA", AFUNPTR(BeforeHttpOpenRequestA), AFUNPTR(AfterHttpOpenRequestA), 8);
-    InstrumentRoutine(img, "HttpOpenRequestW", AFUNPTR(BeforeHttpOpenRequestW), AFUNPTR(AfterHttpOpenRequestW), 8);
-    InstrumentRoutine(img, "HttpSendRequestA", AFUNPTR(BeforeHttpSendRequestA), AFUNPTR(AfterHttpSendRequestA), 5);
-    InstrumentRoutine(img, "HttpSendRequestW", AFUNPTR(BeforeHttpSendRequestW), AFUNPTR(AfterHttpSendRequestW), 5);
-    InstrumentRoutine(img, "HttpSendRequestExA", AFUNPTR(BeforeHttpSendRequestExA), AFUNPTR(AfterHttpSendRequestExA), 5);
-    InstrumentRoutine(img, "HttpSendRequestExW", AFUNPTR(BeforeHttpSendRequestExW), AFUNPTR(AfterHttpSendRequestExW), 5);
-    InstrumentRoutine(img, "InternetOpenUrlA", AFUNPTR(BeforeInternetOpenUrlA), AFUNPTR(AfterInternetOpenUrlA), 6);
-    InstrumentRoutine(img, "InternetOpenUrlW", AFUNPTR(BeforeInternetOpenUrlW), AFUNPTR(AfterInternetOpenUrlW), 6);
-    InstrumentRoutine(img, "WinHttpConnect", AFUNPTR(BeforeWinHttpConnect), AFUNPTR(AfterWinHttpConnect), 4);
-    InstrumentRoutine(img, "DnsQuery_A", AFUNPTR(BeforeDnsQuery_A), AFUNPTR(AfterDnsQuery_A), 6);
-    InstrumentRoutine(img, "DnsQuery_W", AFUNPTR(BeforeDnsQuery_W), AFUNPTR(AfterDnsQuery_W), 6);
+ 
+    if (ImageNameContains(img, "ws2_32")) {
+        InstrumentRoutine(img, "send",         AFUNPTR(BeforeSend),         AFUNPTR(AfterSend),         4);
+        InstrumentRoutine(img, "sendto",       AFUNPTR(BeforeSendTo),       AFUNPTR(AfterSendTo),       6);
+        InstrumentRoutine(img, "connect",      AFUNPTR(BeforeConnect),      AFUNPTR(AfterConnect),      3);
+        InstrumentRoutine(img, "recv",         AFUNPTR(BeforeRecv),         AFUNPTR(AfterRecv),         4);
+        InstrumentRoutine(img, "recvfrom",     AFUNPTR(BeforeRecvFrom),     AFUNPTR(AfterRecvFrom),     6);
+        InstrumentRoutine(img, "getaddrinfo",  AFUNPTR(BeforeGetAddrInfo),  AFUNPTR(AfterGetAddrInfo),  4);
+        InstrumentRoutine(img, "gethostbyname",AFUNPTR(BeforeGetHostByName),AFUNPTR(AfterGetHostByName),1);
+        InstrumentRoutine(img, "GetAddrInfoW", AFUNPTR(BeforeGetAddrInfoW), AFUNPTR(AfterGetAddrInfoW), 4);
+    }
+ 
+    if (ImageNameContains(img, "wininet")) {
+        InstrumentRoutine(img, "HttpOpenRequestA",    AFUNPTR(BeforeHttpOpenRequestA),    AFUNPTR(AfterHttpOpenRequestA),    8);
+        InstrumentRoutine(img, "HttpOpenRequestW",    AFUNPTR(BeforeHttpOpenRequestW),    AFUNPTR(AfterHttpOpenRequestW),    8);
+        InstrumentRoutine(img, "HttpSendRequestA",    AFUNPTR(BeforeHttpSendRequestA),    AFUNPTR(AfterHttpSendRequestA),    5);
+        InstrumentRoutine(img, "HttpSendRequestW",    AFUNPTR(BeforeHttpSendRequestW),    AFUNPTR(AfterHttpSendRequestW),    5);
+        InstrumentRoutine(img, "HttpSendRequestExA",  AFUNPTR(BeforeHttpSendRequestExA),  AFUNPTR(AfterHttpSendRequestExA),  5);
+        InstrumentRoutine(img, "HttpSendRequestExW",  AFUNPTR(BeforeHttpSendRequestExW),  AFUNPTR(AfterHttpSendRequestExW),  5);
+        InstrumentRoutine(img, "InternetOpenUrlA",    AFUNPTR(BeforeInternetOpenUrlA),    AFUNPTR(AfterInternetOpenUrlA),    6);
+        InstrumentRoutine(img, "InternetOpenUrlW",    AFUNPTR(BeforeInternetOpenUrlW),    AFUNPTR(AfterInternetOpenUrlW),    6);
+    }
+ 
+    if (ImageNameContains(img, "winhttp")) {
+        InstrumentRoutine(img, "WinHttpConnect", AFUNPTR(BeforeWinHttpConnect), AFUNPTR(AfterWinHttpConnect), 4);
+    }
+ 
+    if (ImageNameContains(img, "dnsapi")) {
+        InstrumentRoutine(img, "DnsQuery_A", AFUNPTR(BeforeDnsQuery_A), AFUNPTR(AfterDnsQuery_A), 6);
+        InstrumentRoutine(img, "DnsQuery_W", AFUNPTR(BeforeDnsQuery_W), AFUNPTR(AfterDnsQuery_W), 6);
+    }
 }
 
 void StartNetworkOperationsModule() {
