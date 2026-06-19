@@ -6,7 +6,7 @@ The pintool, RansomwareAnalyzer.dll, generates logs containing Windows API call 
 
 The RansomwareAnalyzer pintool consists of a main file that orchestrates all the modules, together with six modules that instrument different operations performed by the sample, four of them instrumenting different Windows APIs, one monitoring the ILS of the program, and the last one tracking the process tree created by the sample. A logger component timestamps and stores the API calls in log files separated by module. The structural outline of the developed RansomwareAnalyzer custom pintool can be observed in the diagram.
 
-![screenshot]("RansomwareAnalyzerCode.png")
+![alt text](https://github.com/PloscaruAlex/RansomwareAnalyzer/blob/main/RansomwareAnalyzerCode.png)
 
 The pintool was tested and developed for Intel Pin 4.2, along with Microsoft Visual Studio 2026.
 
