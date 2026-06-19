@@ -85,9 +85,6 @@ static RTN FindRoutineBySymbol(IMG img, const char* apiName) {
  
         const ADDRINT addr = IMG_LowAddress(img) + offset;
  
-        // Skip forwarded exports: their RVA points into the .edata section,
-        // not into executable code.  Calling RTN_FindByAddress there gives a
-        // broken RTN that silently swallows IPOINT_BEFORE callbacks.
         if (!AddressIsExecutable(img, addr))
             continue;
  
@@ -95,8 +92,7 @@ static RTN FindRoutineBySymbol(IMG img, const char* apiName) {
         if (RTN_Valid(rtn))
             return rtn;
     }
- 
-    // Fallback for functions not found via the symbol table.
+
     return RTN_FindByName(img, apiName);
 }
 
