@@ -10,3 +10,9 @@ The RansomwareAnalyzer pintool consists of a main file that orchestrates all the
 
 The pintool was tested and developed for Intel Pin 4.2, along with Microsoft Visual Studio 2026.
 
+
+**This project is the implementation used for my thesis:**  
+*"Ransomware family classification using Machine Learning algorithms based on DBI analysis"* by Alexandru Ploscaru, [UNIVERSITY POLITEHNICA OF BUCHAREST], [2026]
+
+The code is licensed under the MIT License (see [LICENSE](LICENSE) file)
+
